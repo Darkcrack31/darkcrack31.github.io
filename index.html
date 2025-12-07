@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
-    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <title>Contador de Hilo FTTH</title>
+    <title>Número de Hilo FTTH</title>
     <style>
         * {
             margin: 0;
@@ -78,21 +76,21 @@
         
         .button-group {
             display: flex;
-            gap: 10px;
-            margin-top: 30px;
+            gap: 8px;
+            margin-top: 20px;
         }
         
         button {
             flex: 1;
-            padding: 14px;
+            padding: 8px 10px;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.18s ease;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
         }
         
         #calcularBtn {
@@ -207,8 +205,67 @@
             margin-top: 8px;
             font-style: italic;
         }
-        
-        .footer {
+        /* Plantilla (collapsed submenu) */
+        .template-section {
+            margin-top: 30px;
+        }
+        .tpl-toggle {
+            display: block;
+            margin: 0 auto 8px auto;
+            text-align: center;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(90deg, #ff9a9e, #fecfef);
+            border: none;
+            border-radius: 8px;
+            color: #7a0b0b;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(250, 128, 128, 0.12);
+            width: fit-content;
+        }
+        .tpl-toggle:active { transform: translateY(1px); }
+        .template-content {
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #fbfbfd;
+            border: 1px dashed #e6e6ea;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 260ms ease, opacity 220ms ease, transform 260ms ease;
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+        .template-content.open {
+            max-height: 520px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .template-section h2 {
+            display:none;
+        }
+        .template-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
+        .template-row input[type="text"], .template-row textarea, .template-row select { flex:1; padding:10px; border:1px solid #e0e0e0; border-radius:6px; }
+        #plantillaSalida { width:100%; height:120px; resize:vertical; font-family:monospace; }
+        .template-actions { display:flex; gap:8px; margin-top:10px; justify-content:center; }
+        .template-actions button { padding:6px 10px; font-size:12px; border-radius:6px; min-width:80px; }
+        /* Footer */
+        .site-footer {
+            margin: 18px auto 0 auto;
+            max-width: 900px;
+            text-align: center;
+            padding: 10px 14px;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            font-size: 13px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            opacity: 0.95; /* visual boost while background uses rgba for 0.5 */
+        }
+         .footer {
             margin-top: 20px;
             font-size: 13px;
             color: #666;
@@ -219,7 +276,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>📡 Contador de Hilo FTTH</h1>
+        <h1>📡 Número de Hilo FTTH</h1>
         
         <div id="error" class="error"></div>
         
@@ -277,16 +334,104 @@
                 <div class="resultado-valor numero-hilo" id="resultadoNumero"></div>
             </div>
         </div>
+        
+        <div class="template-section">
+            <button id="tplToggle" class="tpl-toggle" aria-expanded="false">🔽 Generar Plantilla</button>
+            <div class="template-content" aria-hidden="true">
+                <div class="template-row">
+                    <label style="width:120px">Puerto:</label>
+                    <input type="text" id="tplPuerto" placeholder="Ej: 1,2" />
+                </div>
+                <div class="template-row">
+                    <label style="width:120px">Bandeja:</label>
+                    <input type="text" id="tplBandeja" placeholder="Ej: 1,2" />
+                </div>
+                <div class="template-row">
+                    <label style="width:120px">Splitter:</label>
+                    <input type="text" id="tplSplitter" placeholder="Ej: 1,2" />
+                </div>
+                <div class="template-row">
+                    <label style="width:120px">FDT Puerto(s) usado(s):</label>
+                    <input type="text" id="tplPuertosUsados" placeholder="Ej: 1,2,3" />
+                </div>
+                <div class="template-row">
+                    <label style="width:120px">Closure Puerto(s) usado(s):</label>
+                    <input type="text" id="tplClosure" placeholder="Ej: 1,2,3" />
+                </div>
+                <div class="template-actions">
+                    <button type="button" id="generarPlantilla">Generar</button>
+                    <button type="button" id="copiarPlantilla">Copiar</button>
+                </div>
+                <div style="margin-top:12px">
+                    <textarea id="plantillaSalida" readonly placeholder="Aquí aparecerá la plantilla generada"></textarea>
+                </div>
+            </div>
+        </div>
         <div class="footer">D4RK - 993337929 © 2025 — Todos los derechos reservados</div>
     </div>
     
     <script>
         const a=document.getElementById('nHilos'),b=document.getElementById('nBuffer'),c=document.getElementById('nHilo'),d=document.getElementById('calcularBtn'),e=document.getElementById('limpiarBtn'),f=document.getElementById('resultado'),g=document.getElementById('error'),h={1:"Azul",2:"Naranja",3:"Verde",4:"Marrón",5:"Gris",6:"Blanco",7:"Rojo",8:"Negro",9:"Amarillo",10:"Violeta",11:"Rosa",12:"Aqua"};a.addEventListener('change',i);a.addEventListener('input',i);function i(){const j=parseInt(a.value);c.innerHTML='<option value="">-- Selecciona un hilo --</option>';if(j>0&&j<=12)for(let k=1;k<=j;k++){const l=document.createElement('option');l.value=k;l.textContent=`${h[k]}`;c.appendChild(l)}}d.addEventListener('click',function(){const j=parseInt(a.value),m=parseInt(b.value),n=parseInt(c.value);if(!j||!m||!n){p('Por favor completa todos los campos');return}if(m<1||m>12){p('Buffer debe estar entre 1 y 12');return}if(n<1||n>j){p(`Hilo debe estar entre 1 y ${j}`);return}const o=j*(m-1)+n;q({buffer_color:h[m],hilo_color:h[n],numero_hilo:o});r()});e.addEventListener('click',function(){a.value='6';b.value='';c.value='';f.classList.remove('activo');r();i()});function q(s){document.getElementById('resultadoBuffer').textContent=s.buffer_color;document.getElementById('resultadoHilo').textContent=s.hilo_color;document.getElementById('resultadoNumero').textContent=s.numero_hilo;f.classList.add('activo')}function p(t){g.textContent=t;g.classList.add('activo')}function r(){g.classList.remove('activo')}i();
     </script>
+    <script>
+        // Plantilla: generación y copia (Título fijo: FDT) + toggle submenu
+        const btnGen = document.getElementById('generarPlantilla');
+        const btnCopy = document.getElementById('copiarPlantilla');
+        const out = document.getElementById('plantillaSalida');
+        const tplToggle = document.getElementById('tplToggle');
+        const tplContent = document.querySelector('.template-content');
+
+        function generarPlantilla() {
+            const puerto = document.getElementById('tplPuerto').value.trim() || '-';
+            const bandeja = document.getElementById('tplBandeja').value.trim() || '-';
+            const splitter = document.getElementById('tplSplitter').value.trim() || '-';
+            const puertosUsados = document.getElementById('tplPuertosUsados').value.trim() || '-';
+            const closure = document.getElementById('tplClosure').value.trim() || '-';
+
+            const nHilos = a.value || '12';
+            const buffer = b.value || '-';
+            const hilo = c.value || '-';
+            const numeroHilo = (nHilos !== '-' && buffer !== '-') ? (parseInt(nHilos) * (parseInt(buffer) - 1) + (hilo === '-' ? 0 : parseInt(hilo))) : '-';
+
+            // Construir plantilla con título fijo "FDT"
+            const lines = [];
+            lines.push('FDT:');
+            lines.push('Puerto: ' + puerto);
+            lines.push('Bandeja: ' + bandeja);
+            lines.push('Splitter: ' + splitter);
+            lines.push('FDT Puerto(s) usado(s): ' + puertosUsados);
+            lines.push('Closure Puerto(s) usado(s): ' + closure);
+            //lines.push('Buffer: ' + buffer + ' | Hilo: ' + hilo);
+            //lines.push('N° Hilo: ' + numeroHilo);
+
+            out.value = lines.join('\n');
+            out.select();
+        }
+
+        async function copiarPlantilla() {
+            try {
+                await navigator.clipboard.writeText(out.value);
+                btnCopy.textContent = '✓';
+                setTimeout(()=> btnCopy.textContent = 'Copiar', 1200);
+            } catch (err) {
+                btnCopy.textContent = 'Err';
+                console.error(err);
+            }
+        }
+
+        if (btnGen) btnGen.addEventListener('click', generarPlantilla);
+        if (btnCopy) btnCopy.addEventListener('click', copiarPlantilla);
+
+        // Toggle behavior for template submenu
+        if (tplToggle && tplContent) {
+            tplToggle.addEventListener('click', () => {
+                const open = tplContent.classList.toggle('open');
+                tplToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                tplContent.setAttribute('aria-hidden', open ? 'false' : 'true');
+                tplToggle.textContent = open ? '🔼 Generar Plantilla' : '🔽 Generar Plantilla';
+            });
+        }
+    </script>
+    
 </body>
 </html>
-
-
-
-
-
