@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>Número de Hilo FTTH</title>
     <style>
         * {
@@ -238,18 +237,30 @@
             transition: max-height 260ms ease, opacity 220ms ease, transform 260ms ease;
             opacity: 0;
             transform: translateY(-6px);
+            display: flex;
+            flex-direction: column;
         }
         .template-content.open {
             max-height: 520px;
             opacity: 1;
             transform: translateY(0);
+            overflow-y: auto;
+            padding-right: 6px; /* avoid content behind scrollbar */
+        }
+        /* Custom scrollbar for template panels */
+        .template-content.open::-webkit-scrollbar { width: 8px; }
+        .template-content.open::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
+        .template-content.open { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.12) transparent; }
+        @media (max-width: 520px) {
+            .template-content.open { max-height: 320px; }
         }
         .template-section h2 {
             display:none;
         }
         .template-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
         .template-row input[type="text"], .template-row textarea, .template-row select { flex:1; padding:10px; border:1px solid #e0e0e0; border-radius:6px; }
-        #plantillaSalida { width:100%; height:120px; resize:vertical; font-family:monospace; }
+        /* Make template textareas expand to use panel space */
+        .template-content textarea { width:100%; flex:1; min-height:180px; resize:vertical; font-family:monospace; padding:8px; border:1px solid #e0e0e0; border-radius:6px; }
         .template-actions { display:flex; gap:8px; margin-top:10px; justify-content:center; }
         .template-actions button { padding:6px 10px; font-size:12px; border-radius:6px; min-width:80px; }
         /* Footer */
@@ -368,6 +379,101 @@
                 </div>
             </div>
         </div>
+        <!-- Sección: Plantilla de Liquidación -->
+        <div class="template-section">
+            <button id="tplToggleLiq" class="tpl-toggle" aria-expanded="false">🔽 GENERAR PLANTILLA DE LIQUIDACION</button>
+            <div class="template-content" id="tplContentLiq" aria-hidden="true">
+                <div class="template-row">
+                    <label style="width:160px">Dirección:</label>
+                    <input type="text" id="tplDireccion" placeholder="Ej: Calle Falsa 123" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Nombre de Edificio:</label>
+                    <input type="text" id="tplEdificio" placeholder="Ej: Torre Central" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Cantidad de Torres:</label>
+                    <input type="number" id="tplTorres" min="0" placeholder="Ej: 2" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Cantidad de Pisos:</label>
+                    <input type="number" id="tplPisos" min="0" placeholder="Ej: 10" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Dptos. por Piso:</label>
+                    <input type="number" id="tplDptosPorPiso" min="0" placeholder="Ej: 4" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Piso donde queda el FAT:</label>
+                    <input type="text" id="tplPisoFat" placeholder="Ej: 1,2,3" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Ingreso:</label>
+                    <input type="text" id="tplIngreso" placeholder="Ej: Por calle A" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Cantidad de Sótanos:</label>
+                    <input type="number" id="tplSotanos" min="0" placeholder="Ej: 1" />
+                </div>
+
+                <hr style="border:none;border-top:1px dashed #e6e6ea;margin:12px 0;" />
+                <div style="font-weight:700;margin-bottom:8px;color:#444">Materiales Utilizados</div>
+                <div class="template-row">
+                    <label style="width:160px">Closure:</label>
+                    <input type="text" id="tplMatClosure" placeholder="Ej: CL-12" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Fat:</label>
+                    <input type="text" id="tplMatFat" placeholder="Ej: FAT-01" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Preformados:</label>
+                    <input type="text" id="tplMatPreformados" placeholder="Ej: 2" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Etiquetas:</label>
+                    <input type="text" id="tplMatEtiquetas" placeholder="Ej: 50" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Cintillos Amarres:</label>
+                    <input type="text" id="tplMatCintillos" placeholder="Ej: 20" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Smuv:</label>
+                    <input type="text" id="tplMatSmuv" placeholder="Ej: 10" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Cinta Aislante:</label>
+                    <input type="text" id="tplMatCinta" placeholder="Ej: 5" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">F.O (mts):</label>
+                    <input type="text" id="tplMatFO" placeholder="Ej: 120" />
+                </div>
+
+                <hr style="border:none;border-top:1px dashed #e6e6ea;margin:12px 0;" />
+                <div style="font-weight:700;margin-bottom:8px;color:#444">Cuadrilla</div>
+                <div class="template-row">
+                    <label style="width:160px">Tec. Empalmador:</label>
+                    <input type="text" id="tplTecEmpalmador" placeholder="Nombre" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Tec. Liniero:</label>
+                    <input type="text" id="tplTecLiniero" placeholder="Nombre" />
+                </div>
+                <div class="template-row">
+                    <label style="width:160px">Tec. Ayudante:</label>
+                    <input type="text" id="tplTecAyudante" placeholder="Nombre" />
+                </div>
+                <div class="template-actions">
+                    <button type="button" id="generarPlantillaLiq">Generar</button>
+                    <button type="button" id="copiarPlantillaLiq">Copiar</button>
+                </div>
+                <div style="margin-top:12px">
+                    <textarea id="plantillaSalidaLiq" readonly placeholder="Aquí aparecerá la plantilla de liquidación"></textarea>
+                </div>
+            </div>
+        </div>
         <div class="footer">D4RK - 993337929 © 2025 — Todos los derechos reservados</div>
     </div>
     
@@ -432,8 +538,92 @@
                 tplToggle.textContent = open ? '🔼 Generar Plantilla' : '🔽 Generar Plantilla';
             });
         }
+
+        // Toggle + generación para Plantilla de Liquidación
+        const tplToggleLiq = document.getElementById('tplToggleLiq');
+        const tplContentLiq = document.getElementById('tplContentLiq');
+        const btnGenLiq = document.getElementById('generarPlantillaLiq');
+        const btnCopyLiq = document.getElementById('copiarPlantillaLiq');
+        const outLiq = document.getElementById('plantillaSalidaLiq');
+
+        if (tplToggleLiq && tplContentLiq) {
+            tplToggleLiq.addEventListener('click', () => {
+                const open = tplContentLiq.classList.toggle('open');
+                tplToggleLiq.setAttribute('aria-expanded', open ? 'true' : 'false');
+                tplContentLiq.setAttribute('aria-hidden', open ? 'false' : 'true');
+                tplToggleLiq.textContent = open ? '🔼 GENERAR PLANTILLA DE LIQUIDACION' : '🔽 GENERAR PLANTILLA DE LIQUIDACION';
+            });
+        }
+
+        if (btnGenLiq) {
+            btnGenLiq.addEventListener('click', () => {
+                const direccion = document.getElementById('tplDireccion').value.trim() || '-';
+                const edificio = document.getElementById('tplEdificio').value.trim() || '-';
+                const torres = document.getElementById('tplTorres').value || '0';
+                const pisos = document.getElementById('tplPisos').value || '0';
+                const dptos = document.getElementById('tplDptosPorPiso').value || '-';
+                const pisoFatRaw = (document.getElementById('tplPisoFat').value || '').trim();
+                const pisoFat = pisoFatRaw ? pisoFatRaw.replace(/\s*,\s*/g, ',') : '-';
+                const ingreso = document.getElementById('tplIngreso').value.trim() || '-';
+                const sotanos = document.getElementById('tplSotanos').value || '0';
+
+                const matClosure = document.getElementById('tplMatClosure').value.trim() || '-';
+                const matFat = document.getElementById('tplMatFat').value.trim() || '-';
+                const matPreformados = document.getElementById('tplMatPreformados').value.trim() || '-';
+                const matEtiquetas = document.getElementById('tplMatEtiquetas').value.trim() || '-';
+                const matCintillos = document.getElementById('tplMatCintillos').value.trim() || '-';
+                const matSmuv = document.getElementById('tplMatSmuv').value.trim() || '-';
+                const matCinta = document.getElementById('tplMatCinta').value.trim() || '-';
+                const matFO = document.getElementById('tplMatFO').value.trim() || '-';
+
+                const tecEmp = document.getElementById('tplTecEmpalmador').value.trim() || '-';
+                const tecLin = document.getElementById('tplTecLiniero').value.trim() || '-';
+                const tecAyud = document.getElementById('tplTecAyudante').value.trim() || '-';
+
+                const lines = [];
+                lines.push('PLANTILLA DE LIQUIDACION');
+                lines.push('Dirección: ' + direccion);
+                lines.push('Nombre de Edificio: ' + edificio);
+                lines.push('Cantidad de Torres: ' + torres);
+                lines.push('Cantidad de Pisos: ' + pisos);
+                lines.push('Dptos. por Piso: ' + dptos);
+                lines.push('Piso donde queda el FAT: ' + pisoFat);
+                lines.push('Ingreso: ' + ingreso);
+                lines.push('Cantidad de Sótanos: ' + sotanos);
+                lines.push('');
+                lines.push('Materiales Utilizados:');
+                lines.push('  Closure: ' + matClosure);
+                lines.push('  Fat: ' + matFat);
+                lines.push('  Preformados: ' + matPreformados);
+                lines.push('  Etiquetas: ' + matEtiquetas);
+                lines.push('  Cintillos Amarres: ' + matCintillos);
+                lines.push('  Smuv: ' + matSmuv);
+                lines.push('  Cinta Aislante: ' + matCinta);
+                lines.push('  F.O (mts): ' + matFO);
+                lines.push('');
+                lines.push('Cuadrilla:');
+                lines.push('  Tec. Empalmador: ' + tecEmp);
+                lines.push('  Tec. Liniero: ' + tecLin);
+                lines.push('  Tec. Ayudante: ' + tecAyud);
+
+                outLiq.value = lines.join('\n');
+                outLiq.select();
+            });
+        }
+
+        if (btnCopyLiq) {
+            btnCopyLiq.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(outLiq.value);
+                    btnCopyLiq.textContent = '✓';
+                    setTimeout(()=> btnCopyLiq.textContent = 'Copiar', 1200);
+                } catch (err) {
+                    btnCopyLiq.textContent = 'Err';
+                    console.error(err);
+                }
+            });
+        }
     </script>
     
 </body>
 </html>
-
