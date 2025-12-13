@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+
     <script>
     (function(){const a=document.getElementById('nHilos'),b=document.getElementById('nBuffer'),c=document.getElementById('nHilo'),d=document.getElementById('calcularBtn'),e=document.getElementById('limpiarBtn'),res=document.getElementById('resultado'),err=document.getElementById('error');const col={1:'Azul',2:'Naranja',3:'Verde',4:'Marrón',5:'Gris',6:'Blanco',7:'Rojo',8:'Negro',9:'Amarillo',10:'Violeta',11:'Rosa',12:'Aqua'};function fill(){let n=parseInt(a.value);c.innerHTML='<option value="">-- Selecciona un hilo --</option>';if(n>0&&n<=12)for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=col[i];c.appendChild(o)}}function showErr(t){err.textContent=t;err.classList.add('activo')}function hideErr(){err.classList.remove('activo')}a.addEventListener('change',fill);a.addEventListener('input',fill);d.addEventListener('click',function(){let n=parseInt(a.value),bf=parseInt(b.value),hl=parseInt(c.value);if(!n||!bf||!hl){showErr('Por favor completa todos los campos');return}if(bf<1||bf>12){showErr('Buffer debe estar entre 1 y 12');return}if(hl<1||hl>n){showErr('Hilo debe estar entre 1 y '+n);return}let num=n*(bf-1)+hl;document.getElementById('resultadoBuffer').textContent=col[bf];document.getElementById('resultadoHilo').textContent=col[hl];document.getElementById('resultadoNumero').textContent=num;res.classList.add('activo');hideErr()});e.addEventListener('click',function(){a.value='6';b.value='';c.value='';res.classList.remove('activo');hideErr();fill()});fill();
 
@@ -585,3 +587,4 @@
     
 </body>
 </html>
+
