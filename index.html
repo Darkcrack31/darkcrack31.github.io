@@ -1,18 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-
-    <script>
-    (function(){const a=document.getElementById('nHilos'),b=document.getElementById('nBuffer'),c=document.getElementById('nHilo'),d=document.getElementById('calcularBtn'),e=document.getElementById('limpiarBtn'),res=document.getElementById('resultado'),err=document.getElementById('error');const col={1:'Azul',2:'Naranja',3:'Verde',4:'Marrón',5:'Gris',6:'Blanco',7:'Rojo',8:'Negro',9:'Amarillo',10:'Violeta',11:'Rosa',12:'Aqua'};function fill(){let n=parseInt(a.value);c.innerHTML='<option value="">-- Selecciona un hilo --</option>';if(n>0&&n<=12)for(let i=1;i<=n;i++){let o=document.createElement('option');o.value=i;o.textContent=col[i];c.appendChild(o)}}function showErr(t){err.textContent=t;err.classList.add('activo')}function hideErr(){err.classList.remove('activo')}a.addEventListener('change',fill);a.addEventListener('input',fill);d.addEventListener('click',function(){let n=parseInt(a.value),bf=parseInt(b.value),hl=parseInt(c.value);if(!n||!bf||!hl){showErr('Por favor completa todos los campos');return}if(bf<1||bf>12){showErr('Buffer debe estar entre 1 y 12');return}if(hl<1||hl>n){showErr('Hilo debe estar entre 1 y '+n);return}let num=n*(bf-1)+hl;document.getElementById('resultadoBuffer').textContent=col[bf];document.getElementById('resultadoHilo').textContent=col[hl];document.getElementById('resultadoNumero').textContent=num;res.classList.add('activo');hideErr()});e.addEventListener('click',function(){a.value='6';b.value='';c.value='';res.classList.remove('activo');hideErr();fill()});fill();
-
-    /* Plantilla FDT (minified) */
-    const bg=document.getElementById('generarPlantilla'),bc=document.getElementById('copiarPlantilla'),out=document.getElementById('plantillaSalida'),tplToggle=document.getElementById('tplToggle'),tplContent=document.querySelector('.template-content');if(bg)bg.addEventListener('click',function(){const puerto=document.getElementById('tplPuerto').value.trim()||'-',bandeja=document.getElementById('tplBandeja').value.trim()||'-',splitter=document.getElementById('tplSplitter').value.trim()||'-',puertos=document.getElementById('tplPuertosUsados').value.trim()||'-',closure=document.getElementById('tplClosure').value.trim()||'-';let lines=['FDT:','Puerto: '+puerto,'Bandeja: '+bandeja,'Splitter: '+splitter,'FDT Puerto(s) usado(s): '+puertos,'Closure Puerto(s) usado(s): '+closure];out.value=lines.join('\n');out.select()});if(bc)bc.addEventListener('click',async function(){try{await navigator.clipboard.writeText(out.value);bc.textContent='✓';setTimeout(()=>bc.textContent='Copiar',1200)}catch(e){bc.textContent='Err'}});if(tplToggle&&tplContent)tplToggle.addEventListener('click',()=>{const o=tplContent.classList.toggle('open');tplToggle.setAttribute('aria-expanded',o?'true':'false');tplContent.setAttribute('aria-hidden',o?'false':'true');tplToggle.textContent=o?'🔼 Generar Plantilla':'🔽 Generar Plantilla'});
-
-    /* Plantilla Liquidacion (minified) */
-    const tglL=document.getElementById('tplToggleLiq'),ctL=document.getElementById('tplContentLiq'),gL=document.getElementById('generarPlantillaLiq'),cpL=document.getElementById('copiarPlantillaLiq'),outL=document.getElementById('plantillaSalidaLiq');if(tglL&&ctL)tglL.addEventListener('click',()=>{const o=ctL.classList.toggle('open');tglL.setAttribute('aria-expanded',o?'true':'false');ctL.setAttribute('aria-hidden',o?'false':'true');tglL.textContent=o?'🔼 GENERAR PLANTILLA DE LIQUIDACION':'🔽 GENERAR PLANTILLA DE LIQUIDACION'});if(gL)gL.addEventListener('click',()=>{const direccion=document.getElementById('tplDireccion').value.trim()||'-',ed=document.getElementById('tplEdificio').value.trim()||'-',tor=document.getElementById('tplTorres').value||'0',pis=document.getElementById('tplPisos').value||'0',dpt=document.getElementById('tplDptosPorPiso').value||'-',pFat=(document.getElementById('tplPisoFat').value||'').trim().replace(/\s*,\s*/g,',')||'-',ing=document.getElementById('tplIngreso').value.trim()||'-',sot=document.getElementById('tplSotanos').value||'0',mc=document.getElementById('tplMatClosure').value.trim()||'-',mf=document.getElementById('tplMatFat').value.trim()||'-',mp=document.getElementById('tplMatPreformados').value.trim()||'-',me=document.getElementById('tplMatEtiquetas').value.trim()||'-',mcint=document.getElementById('tplMatCintillos').value.trim()||'-',ms=document.getElementById('tplMatSmuv').value.trim()||'-',mci=document.getElementById('tplMatCinta').value.trim()||'-',mfo=document.getElementById('tplMatFO').value.trim()||'-',te=document.getElementById('tplTecEmpalmador').value.trim()||'-',tl=document.getElementById('tplTecLiniero').value.trim()||'-',ta=document.getElementById('tplTecAyudante').value.trim()||'-';let L=['PLANTILLA DE LIQUIDACION','Dirección: '+direccion,'Nombre de Edificio: '+ed,'Cantidad de Torres: '+tor,'Cantidad de Pisos: '+pis,'Dptos. por Piso: '+dpt,'Piso donde queda el FAT: '+pFat,'Ingreso: '+ing,'Cantidad de Sótanos: '+sot,'','Materiales Utilizados:','  Closure: '+mc,'  Fat: '+mf,'  Preformados: '+mp,'  Etiquetas: '+me,'  Cintillos Amarres: '+mcint,'  Smuv: '+ms,'  Cinta Aislante: '+mci,'  F.O (mts): '+mfo,'','Cuadrilla:','  Tec. Empalmador: '+te,'  Tec. Liniero: '+tl,'  Tec. Ayudante: '+ta];outL.value=L.join('\n');outL.select()});if(cpL)cpL.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(outL.value);cpL.textContent='✓';setTimeout(()=>cpL.textContent='Copiar',1200)}catch(e){cpL.textContent='Err'}});
-    })();
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>Número de Hilo FTTH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         input[type="number"],
@@ -587,4 +627,3 @@
     
 </body>
 </html>
-
