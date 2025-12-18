@@ -381,7 +381,7 @@
         </div>
         <!-- Sección: Plantilla de Liquidación -->
         <div class="template-section">
-            <button id="tplToggleLiq" class="tpl-toggle" aria-expanded="false">🔽 GENERAR PLANTILLA DE LIQUIDACION</button>
+            <button id="tplToggleLiq" class="tpl-toggle" aria-expanded="false">🔽 GENERAR PLANTILLA DE LIQUIDACIÓN</button>
             <div class="template-content" id="tplContentLiq" aria-hidden="true">
                 <div class="template-row">
                     <label style="width:160px">Dirección:</label>
@@ -502,12 +502,12 @@
 
             // Construir plantilla con título fijo "FDT"
             const lines = [];
-            lines.push('FDT:');
-            lines.push('Puerto: ' + puerto);
-            lines.push('Bandeja: ' + bandeja);
-            lines.push('Splitter: ' + splitter);
-            lines.push('FDT Puerto(s) usado(s): ' + puertosUsados);
-            lines.push('Closure Puerto(s) usado(s): ' + closure);
+            lines.push('*FDT:*');
+            lines.push('*Puerto:* ' + puerto);
+            lines.push('*Bandeja:* ' + bandeja);
+            lines.push('*Splitter:* ' + splitter);
+            lines.push('*FDT Puerto(s) usado(s):* ' + puertosUsados);
+            lines.push('*Closure Puerto(s) usado(s):* ' + closure);
             //lines.push('Buffer: ' + buffer + ' | Hilo: ' + hilo);
             //lines.push('N° Hilo: ' + numeroHilo);
 
@@ -551,7 +551,7 @@
                 const open = tplContentLiq.classList.toggle('open');
                 tplToggleLiq.setAttribute('aria-expanded', open ? 'true' : 'false');
                 tplContentLiq.setAttribute('aria-hidden', open ? 'false' : 'true');
-                tplToggleLiq.textContent = open ? '🔼 GENERAR PLANTILLA DE LIQUIDACION' : '🔽 GENERAR PLANTILLA DE LIQUIDACION';
+                tplToggleLiq.textContent = open ? '🔼 GENERAR PLANTILLA DE LIQUIDACIÓN' : '🔽 GENERAR PLANTILLA DE LIQUIDACIÓN';
             });
         }
 
@@ -581,30 +581,30 @@
                 const tecAyud = document.getElementById('tplTecAyudante').value.trim() || '-';
 
                 const lines = [];
-                lines.push('PLANTILLA DE LIQUIDACION');
-                lines.push('Dirección: ' + direccion);
-                lines.push('Nombre de Edificio: ' + edificio);
-                lines.push('Cantidad de Torres: ' + torres);
-                lines.push('Cantidad de Pisos: ' + pisos);
-                lines.push('Dptos. por Piso: ' + dptos);
-                lines.push('Piso donde queda el FAT: ' + pisoFat);
-                lines.push('Ingreso: ' + ingreso);
-                lines.push('Cantidad de Sótanos: ' + sotanos);
+                //lines.push('PLANTILLA DE LIQUIDACION');
+                lines.push('*Dirección:* ' + direccion);
+                lines.push('*Nombre de Edificio:* ' + edificio);
+                lines.push('*Cantidad de Torres:* ' + torres);
+                lines.push('*Cantidad de Pisos:* ' + pisos);
+                lines.push('*Dptos. por Piso:* ' + dptos);
+                lines.push('*Piso donde queda el FAT:* ' + pisoFat);
+                lines.push('*Ingreso:* ' + ingreso);
+                lines.push('*Cantidad de Sótanos:* ' + sotanos);
                 lines.push('');
-                lines.push('Materiales Utilizados:');
-                lines.push('  Closure: ' + matClosure);
-                lines.push('  Fat: ' + matFat);
-                lines.push('  Preformados: ' + matPreformados);
-                lines.push('  Etiquetas: ' + matEtiquetas);
-                lines.push('  Cintillos Amarres: ' + matCintillos);
-                lines.push('  Smuv: ' + matSmuv);
-                lines.push('  Cinta Aislante: ' + matCinta);
-                lines.push('  F.O (mts): ' + matFO);
+                lines.push('*Materiales Utilizados:*');
+                lines.push('*Closure:* ' + matClosure);
+                lines.push('*Fat:* ' + matFat);
+                lines.push('*Preformados:* ' + matPreformados);
+                lines.push('*Etiquetas:* ' + matEtiquetas);
+                lines.push('*Cintillos Amarres:* ' + matCintillos);
+                lines.push('*Smuv:* ' + matSmuv);
+                lines.push('*Cinta Aislante:* ' + matCinta);
+                lines.push('*F.O (mts):* ' + matFO);
                 lines.push('');
-                lines.push('Cuadrilla:');
-                lines.push('  Tec. Empalmador: ' + tecEmp);
-                lines.push('  Tec. Liniero: ' + tecLin);
-                lines.push('  Tec. Ayudante: ' + tecAyud);
+                lines.push('*Cuadrilla:*');
+                lines.push('*Tec. Empalmador:* ' + tecEmp);
+                lines.push('*Tec. Liniero:* ' + tecLin);
+                lines.push('*Tec. Ayudante:* ' + tecAyud);
 
                 outLiq.value = lines.join('\n');
                 outLiq.select();
