@@ -25,16 +25,16 @@ let infoCableGlobal = { bufferNom: '-', bufferIdx: '-', hiloNom: '-', hiloIdx: '
 const a = document.getElementById('nHilos'), resBox = document.getElementById('resultado'), errorBox = document.getElementById('error');
 let selectedBuffer = null, selectedHilo = null;
 
-// Control del Cambio de Tema
+// Control del Cambio de Tema (Optimizado para celulares)
 const themeBtn = document.getElementById('themeBtn');
 themeBtn.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     if (currentTheme === 'light') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        themeBtn.textContent = '☀️ Modo Claro';
+        themeBtn.textContent = '☀️'; // Solo el sol para volver a claro
     } else {
         document.documentElement.setAttribute('data-theme', 'light');
-        themeBtn.textContent = '🌓 Modo Oscuro';
+        themeBtn.textContent = '🌙'; // Solo la luna para volver a oscuro
     }
 });
 
