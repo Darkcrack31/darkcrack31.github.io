@@ -284,3 +284,46 @@ button {
 @keyframes slideIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 .footer { margin-top: 25px; font-size: 11px; color: var(--text-muted); text-align: center; }
+
+/* =========================================================================
+   1. TRANSICIÓN GLOBAL PARA CAMBIO DE TEMA SUAVE
+   ========================================================================= */
+/* Aplica esto para que el fondo y los textos no cambien de golpe al pulsar el sol/luna */
+body, header, main, div, section, input, select, button, .tab-content, .color-selector-btn {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* =========================================================================
+   2. BOTÓN DE TEMA OPTIMIZADO (SOL / LUNA)
+   ========================================================================= */
+#themeBtn {
+    font-size: 1.3rem;       /* Tamaño ideal del icono para visualización */
+    width: 42px;             /* Ancho fijo para evitar que deforme la cabecera */
+    height: 42px;            /* Alto idéntico para mantener la simetría */
+    display: inline-flex;    /* Centrado interno perfecto del emoticón */
+    align-items: center;
+    justify-content: center;
+    border: none;            /* Quitamos bordes toscos */
+    background: transparent;  /* Fondo limpio, se adapta al tema actual */
+    cursor: pointer;
+    border-radius: 50%;      /* Formato completamente circular */
+    padding: 0;
+    margin-left: 8px;        /* Separación sutil del título o menús */
+    user-select: none;       /* Evita que el usuario seleccione el icono por error */
+    -webkit-tap-highlight-color: transparent; /* Elimina el recuadro azul feo al tocar en Android */
+    
+    /* Transición rápida para la animación física del botón */
+    transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+/* Efecto visual al pasar el mouse (Solo visible en PC) */
+@media (hover: hover) {
+    #themeBtn:hover {
+        background-color: rgba(128, 128, 128, 0.15); /* Sombra sutil circular */
+    }
+}
+
+/* INTERACCIÓN EN CELULARES: Efecto muelle/físico al pulsar con el dedo */
+#themeBtn:active {
+    transform: scale(0.85);  /* Se encoge un 15% instantáneamente dando feedback */
+}
