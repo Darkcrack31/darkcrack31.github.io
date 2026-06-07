@@ -1,629 +1,157 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>Número de Hilo FTTH</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 600px;
-            width: 100%;
-        }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 28px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background-color: #f9f9f9;
-        }
-        
-        input[type="number"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 20px;
-        }
-        
-        button {
-            flex: 1;
-            padding: 8px 10px;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.18s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-        
-        #calcularBtn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        #calcularBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        #calcularBtn:active {
-            transform: translateY(0);
-        }
-        
-        #limpiarBtn {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        
-        #limpiarBtn:hover {
-            background-color: #e0e0e0;
-        }
-        
-        .resultado {
-            display: none;
-            margin-top: 30px;
-            padding: 25px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            border-radius: 12px;
-            border-left: 5px solid #667eea;
-        }
-        
-        .resultado.activo {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .resultado-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .resultado-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        
-        .resultado-label {
-            color: #666;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-        
-        .resultado-valor {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-        }
-        
-        .numero-hilo {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .error {
-            display: none;
-            padding: 15px;
-            background-color: #fee;
-            border: 2px solid #f88;
-            border-radius: 8px;
-            color: #c33;
-            margin-bottom: 20px;
-            animation: slideIn 0.3s ease;
-        }
-        
-        .error.activo {
-            display: block;
-        }
-        
-        .color-preview {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-left: 8px;
-            vertical-align: middle;
-            border: 2px solid #ddd;
-        }
-        
-        .info-text {
-            font-size: 13px;
-            color: #888;
-            margin-top: 8px;
-            font-style: italic;
-        }
-        /* Plantilla (collapsed submenu) */
-        .template-section {
-            margin-top: 30px;
-        }
-        .tpl-toggle {
-            display: block;
-            margin: 0 auto 8px auto;
-            text-align: center;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: linear-gradient(90deg, #ff9a9e, #fecfef);
-            border: none;
-            border-radius: 8px;
-            color: #7a0b0b;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 6px 18px rgba(250, 128, 128, 0.12);
-            width: fit-content;
-        }
-        .tpl-toggle:active { transform: translateY(1px); }
-        .template-content {
-            margin-top: 12px;
-            padding: 14px;
-            border-radius: 10px;
-            background: #fbfbfd;
-            border: 1px dashed #e6e6ea;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 260ms ease, opacity 220ms ease, transform 260ms ease;
-            opacity: 0;
-            transform: translateY(-6px);
-            display: flex;
-            flex-direction: column;
-        }
-        .template-content.open {
-            max-height: 520px;
-            opacity: 1;
-            transform: translateY(0);
-            overflow-y: auto;
-            padding-right: 6px; /* avoid content behind scrollbar */
-        }
-        /* Custom scrollbar for template panels */
-        .template-content.open::-webkit-scrollbar { width: 8px; }
-        .template-content.open::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 6px; }
-        .template-content.open { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.12) transparent; }
-        @media (max-width: 520px) {
-            .template-content.open { max-height: 320px; }
-        }
-        .template-section h2 {
-            display:none;
-        }
-        .template-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
-        .template-row input[type="text"], .template-row textarea, .template-row select { flex:1; padding:10px; border:1px solid #e0e0e0; border-radius:6px; }
-        /* Make template textareas expand to use panel space */
-        .template-content textarea { width:100%; flex:1; min-height:180px; resize:vertical; font-family:monospace; padding:8px; border:1px solid #e0e0e0; border-radius:6px; }
-        .template-actions { display:flex; gap:8px; margin-top:10px; justify-content:center; }
-        .template-actions button { padding:6px 10px; font-size:12px; border-radius:6px; min-width:80px; }
-        /* Footer */
-        .site-footer {
-            margin: 18px auto 0 auto;
-            max-width: 900px;
-            text-align: center;
-            padding: 10px 14px;
-            background: rgba(0,0,0,0.5);
-            color: #fff;
-            font-size: 13px;
-            border-radius: 8px;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            opacity: 0.95; /* visual boost while background uses rgba for 0.5 */
-        }
-         .footer {
-            margin-top: 20px;
-            font-size: 13px;
-            color: #666;
-            text-align: center;
-            opacity: 0.3;
-        }
-    </style>
+    <title>Gestor Técnico FTTH</title>
+    <link rel="stylesheet" href="style/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>📡 Número de Hilo FTTH</h1>
+        <button class="theme-toggle" id="themeBtn">☀️ Modo Claro</button>
+        <h1>📡 Gestor Técnico FTTH</h1>
         
         <div id="error" class="error"></div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('directo')">Color ➔ Número</button>
+            <button class="tab-btn" onclick="switchTab('inverso')">Número ➔ Color</button>
+        </div>
         
-        <form id="formulario">
-            <div class="form-group">
-                <label for="nHilos">Cantidad de Hilos por Buffer:</label>
-                <input type="number" id="nHilos" name="nHilos" min="1" max="12" value="6" required>
-                <p class="info-text">Máximo 12 hilos disponibles</p>
-            </div>
-            
-            <div class="form-group">
-                <label for="nBuffer">Buffer Usado:</label>
-                <select id="nBuffer" name="nBuffer" required>
-                    <option value="">-- Selecciona un buffer --</option>
-                    <option value="1">Azul</option>
-                    <option value="2">Naranja</option>
-                    <option value="3">Verde</option>
-                    <option value="4">Marrón</option>
-                    <option value="5">Gris</option>
-                    <option value="6">Blanco</option>
-                    <option value="7">Rojo</option>
-                    <option value="8">Negro</option>
-                    <option value="9">Amarillo</option>
-                    <option value="10">Violeta</option>
-                    <option value="11">Rosa</option>
-                    <option value="12">Aqua</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="nHilo">Hilo Usado:</label>
-                <select id="nHilo" name="nHilo" required>
-                    <option value="">-- Primero selecciona cantidad de hilos --</option>
-                </select>
-                <p class="info-text">Las opciones se actualizan según la cantidad de hilos</p>
-            </div>
-            
-            <div class="button-group">
-                <button type="button" id="calcularBtn">Calcular</button>
-                <button type="button" id="limpiarBtn">Limpiar</button>
-            </div>
-        </form>
+        <div id="tab-directo" class="tab-content active">
+            <form onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <label>Hilos por Buffer:</label>
+                    <select id="nHilos">
+                        <option value="6" selected>6 Hilos</option>
+                        <option value="8">8 Hilos</option>
+                        <option value="12">12 Hilos</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Selecciona Buffer Usado:</label>
+                    <div class="color-grid" id="gridBuffer"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Selecciona Hilo Usado:</label>
+                    <div class="color-grid" id="gridHilo"></div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" id="limpiarBtn" style="width:100%;">Limpiar Selección</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="tab-inverso" class="tab-content">
+            <form onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <label>Hilos por Buffer:</label>
+                    <select id="invHilosPorBuffer">
+                        <option value="6" selected>6 Hilos</option>
+                        <option value="8">8 Hilos</option>
+                        <option value="12">12 Hilos</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Número de Hilo Absoluto:</label>
+                    <input type="number" id="invNumeroHilo" min="1" placeholder="Escribe el número aquí... (Ej: 24)">
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" id="invLimpiarBtn" style="width:100%;">Limpiar Entrada</button>
+                </div>
+            </form>
+        </div>
         
         <div id="resultado" class="resultado">
             <div class="resultado-item">
-                <div class="resultado-label">Buffer</div>
-                <div class="resultado-valor" id="resultadoBuffer"></div>
+                <div class="resultado-label">Buffer Identificado</div>
+                <div class="resultado-valor"><span id="resultadoBuffer"></span><span id="badgeBuffer" class="color-badge" style="display:none;"></span></div>
             </div>
             <div class="resultado-item">
-                <div class="resultado-label">Hilo</div>
-                <div class="resultado-valor" id="resultadoHilo"></div>
+                <div class="resultado-label">Hilo Identificado</div>
+                <div class="resultado-valor"><span id="resultadoHilo"></span><span id="badgeHilo" class="color-badge" style="display:none;"></span></div>
             </div>
             <div class="resultado-item">
-                <div class="resultado-label">Número de Hilo</div>
+                <div class="resultado-label">Número de Hilo Correlativo</div>
                 <div class="resultado-valor numero-hilo" id="resultadoNumero"></div>
             </div>
         </div>
         
         <div class="template-section">
-            <button id="tplToggle" class="tpl-toggle" aria-expanded="false">🔽 Generar Plantilla</button>
-            <div class="template-content" aria-hidden="true">
-                <div class="template-row">
-                    <label style="width:120px">Puerto:</label>
-                    <input type="text" id="tplPuerto" placeholder="Ej: 1,2" />
-                </div>
-                <div class="template-row">
-                    <label style="width:120px">Bandeja:</label>
-                    <input type="text" id="tplBandeja" placeholder="Ej: 1,2" />
-                </div>
-                <div class="template-row">
-                    <label style="width:120px">Splitter:</label>
-                    <input type="text" id="tplSplitter" placeholder="Ej: 1,2" />
-                </div>
-                <div class="template-row">
-                    <label style="width:120px">FDT Puerto(s) usado(s):</label>
-                    <input type="text" id="tplPuertosUsados" placeholder="Ej: 1,2,3" />
-                </div>
-                <div class="template-row">
-                    <label style="width:120px">Closure Puerto(s) usado(s):</label>
-                    <input type="text" id="tplClosure" placeholder="Ej: 1,2,3" />
-                </div>
+            <button id="tplToggle" class="tpl-toggle">🔽 Generar Plantilla FDT</button>
+            <div class="template-content">
+                <div class="template-row"><label>Puerto:</label><input type="text" id="tplPuerto" placeholder="Ej: 1,2" /></div>
+                <div class="template-row"><label>Bandeja:</label><input type="text" id="tplBandeja" placeholder="Ej: 1,2" /></div>
+                <div class="template-row"><label>Splitter:</label><input type="text" id="tplSplitter" placeholder="Ej: 1,2" /></div>
+                <div class="template-row"><label>FDT Puerto(s) usado(s):</label><input type="text" id="tplPuertosUsados" placeholder="Ej: 1,2,3" /></div>
+                <div class="template-row"><label>Closure Puerto(s) usado(s):</label><input type="text" id="tplClosure" placeholder="Ej: 1,2,3" /></div>
                 <div class="template-actions">
-                    <button type="button" id="generarPlantilla">Generar</button>
-                    <button type="button" id="copiarPlantilla">Copiar</button>
+                    <button type="button" class="btn-primary" id="generarPlantilla">Generar</button>
+                    <button type="button" class="btn-secondary" id="copiarPlantilla">Copiar</button>
                 </div>
-                <div style="margin-top:12px">
-                    <textarea id="plantillaSalida" readonly placeholder="Aquí aparecerá la plantilla generada"></textarea>
-                </div>
+                <textarea id="plantillaSalida" readonly placeholder="Aquí aparecerá la plantilla generada"></textarea>
             </div>
         </div>
-        <!-- Sección: Plantilla de Liquidación -->
+
         <div class="template-section">
-            <button id="tplToggleLiq" class="tpl-toggle" aria-expanded="false">🔽 GENERAR PLANTILLA DE LIQUIDACIÓN</button>
-            <div class="template-content" id="tplContentLiq" aria-hidden="true">
-                <div class="template-row">
-                    <label style="width:160px">Dirección:</label>
-                    <input type="text" id="tplDireccion" placeholder="Ej: Calle Falsa 123" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Nombre de Edificio:</label>
-                    <input type="text" id="tplEdificio" placeholder="Ej: Torre Central" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Cantidad de Torres:</label>
-                    <input type="number" id="tplTorres" min="0" placeholder="Ej: 2" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Cantidad de Pisos:</label>
-                    <input type="number" id="tplPisos" min="0" placeholder="Ej: 10" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Dptos. por Piso:</label>
-                    <input type="number" id="tplDptosPorPiso" min="0" placeholder="Ej: 4" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Piso donde queda el FAT:</label>
-                    <input type="text" id="tplPisoFat" placeholder="Ej: 1,2,3" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Ingreso:</label>
-                    <input type="text" id="tplIngreso" placeholder="Ej: Por calle A" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Cantidad de Sótanos:</label>
-                    <input type="number" id="tplSotanos" min="0" placeholder="Ej: 1" />
-                </div>
+            <button id="tplToggleLiq" class="tpl-toggle">🔽 Generar Plantilla de Liquidación</button>
+            <div class="template-content" id="tplContentLiq">
+                <div class="template-row"><label>Dirección:</label><input type="text" id="tplDireccion" placeholder="Ej: Av. Próceres..." /></div>
+                <div class="template-row"><label>Nombre de Edificio:</label><input type="text" id="tplEdificio" placeholder="Ej: Torre Central" /></div>
+                <div class="template-row"><label>Cantidad de Torres:</label><input type="number" id="tplTorres" min="0" placeholder="Ej: 2" /></div>
+                <div class="template-row"><label>Cantidad de Pisos:</label><input type="number" id="tplPisos" min="0" placeholder="Ej: 10" /></div>
+                <div class="template-row"><label>Dptos. por Piso:</label><input type="number" id="tplDptosPorPiso" min="0" placeholder="Ej: 4" /></div>
+                <div class="template-row"><label>Piso donde queda el FAT:</label><input type="text" id="tplPisoFat" placeholder="Ej: 4" /></div>
+                <div class="template-row"><label>Ingreso:</label><input type="text" id="tplIngreso" placeholder="Ej: Por calle lateral" /></div>
+                <div class="template-row"><label>Cantidad de Sótanos:</label><input type="number" id="tplSotanos" min="0" placeholder="Ej: 1" /></div>
 
-                <hr style="border:none;border-top:1px dashed #e6e6ea;margin:12px 0;" />
-                <div style="font-weight:700;margin-bottom:8px;color:#444">Materiales Utilizados</div>
-                <div class="template-row">
-                    <label style="width:160px">Closure:</label>
-                    <input type="text" id="tplMatClosure" placeholder="Ej: CL-12" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Fat:</label>
-                    <input type="text" id="tplMatFat" placeholder="Ej: FAT-01" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Preformados:</label>
-                    <input type="text" id="tplMatPreformados" placeholder="Ej: 2" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Etiquetas:</label>
-                    <input type="text" id="tplMatEtiquetas" placeholder="Ej: 50" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Cintillos Amarres:</label>
-                    <input type="text" id="tplMatCintillos" placeholder="Ej: 20" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Smuv:</label>
-                    <input type="text" id="tplMatSmuv" placeholder="Ej: 10" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Cinta Aislante:</label>
-                    <input type="text" id="tplMatCinta" placeholder="Ej: 5" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">F.O (mts):</label>
-                    <input type="text" id="tplMatFO" placeholder="Ej: 120" />
-                </div>
+                <hr style="border:none;border-top:1px dashed var(--border-color);margin:12px 0;" />
+                <div class="tpl-section-title">Materiales Utilizados</div>
+                <div class="template-row"><label>Closure:</label><input type="text" id="tplMatClosure" placeholder="Ej: CL-12" /></div>
+                <div class="template-row"><label>Fat:</label><input type="number" id="tplMatFat" min="0" placeholder="Ej: 2" /></div>
+                <div class="template-row"><label>Preformados:</label><input type="number" id="tplMatPreformados" /></div>
+                <div class="template-row"><label>Etiquetas:</label><input type="number" id="tplMatEtiquetas" /></div>
+                <div class="template-row"><label>Cintillos Amarres:</label><input type="number" id="tplMatCintillos" /></div>
+                <div class="template-row"><label>Smuv:</label><input type="number" id="tplMatSmuv" /></div>
+                <div class="template-row"><label>Cinta Aislante:</label><input type="number" id="tplMatCinta" /></div>
+                <div class="template-row"><label>Abrazaderas:</label><input type="number" id="tplMatAbrazaderas" readonly placeholder="Auto desde FAT" /></div>
+                <div class="template-row"><label>Tornillos:</label><input type="number" id="tplMatTornillos" readonly placeholder="Auto desde FAT" /></div>
+                <div class="template-row"><label>F.O (mts):</label><input type="number" id="tplMatFO" /></div>
+                <div class="template-row"><label>Canaletas:</label><input type="number" id="tplMatCanaletas" placeholder="Cantidad de tramos" /></div>
+                <div class="template-row"><label>Postes Totales:</label><input type="number" id="tplMatPostes" placeholder="Postes intervenidos" /></div>
 
-                <hr style="border:none;border-top:1px dashed #e6e6ea;margin:12px 0;" />
-                <div style="font-weight:700;margin-bottom:8px;color:#444">Cuadrilla</div>
-                <div class="template-row">
-                    <label style="width:160px">Tec. Empalmador:</label>
-                    <input type="text" id="tplTecEmpalmador" placeholder="Nombre" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Tec. Liniero:</label>
-                    <input type="text" id="tplTecLiniero" placeholder="Nombre" />
-                </div>
-                <div class="template-row">
-                    <label style="width:160px">Tec. Ayudante:</label>
-                    <input type="text" id="tplTecAyudante" placeholder="Nombre" />
-                </div>
+                <hr style="border:none;border-top:1px dashed var(--border-color);margin:12px 0;" />
+                <div class="tpl-section-title">Datos de Empalme</div>
+                <div class="template-row"><label>Número de bandeja:</label><input type="text" id="tplEmpBandeja" placeholder="Ej: Bandeja 1" /></div>
+                <div class="template-row"><label>Número de Splitter FDT:</label><input type="text" id="tplEmpSplitter" placeholder="Ej: 1x8 - Spl 2" /></div>
+                <div class="template-row"><label>Puertos del Closure usado:</label><input type="text" id="tplEmpPortsClosure" placeholder="Ej: Puerto 3" /></div>
+
+                <hr style="border:none;border-top:1px dashed var(--border-color);margin:12px 0;" />
+                <div class="tpl-section-title">Puerto PON de FAT Instalado</div>
+                <div class="template-row"><label>Hilo alimentador:</label><input type="text" id="tplPonHilo" placeholder="Ej: Hilo 5 (Verde)" /></div>
+
+                <hr style="border:none;border-top:1px dashed var(--border-color);margin:12px 0;" />
+                <div class="tpl-section-title">Cuadrilla y Control</div>
+                <div class="template-row"><label>Tec. Empalmador:</label><input type="text" id="tplTecEmpalmador" /></div>
+                <div class="template-row"><label>Tec. Liniero:</label><input type="text" id="tplTecLiniero" /></div>
+                <div class="template-row"><label>Tec. Ayudante:</label><input type="text" id="tplTecAyudante" /></div>
+                <div class="template-row"><label>Supervisor:</label><input type="text" id="tplSupervisor" /></div>
+                
                 <div class="template-actions">
-                    <button type="button" id="generarPlantillaLiq">Generar</button>
-                    <button type="button" id="copiarPlantillaLiq">Copiar</button>
+                    <button type="button" class="btn-primary" id="generarPlantillaLiq">Generar</button>
+                    <button type="button" class="btn-secondary" id="copiarPlantillaLiq">Copiar</button>
                 </div>
-                <div style="margin-top:12px">
-                    <textarea id="plantillaSalidaLiq" readonly placeholder="Aquí aparecerá la plantilla de liquidación"></textarea>
-                </div>
+                <textarea id="plantillaSalidaLiq" readonly placeholder="Aquí aparecerá la plantilla de liquidación"></textarea>
             </div>
         </div>
-        <div class="footer">D4RK - 993337929 © 2025 — Todos los derechos reservados</div>
+        <div class="footer">D4RK — Gestión Técnica de Fibra © 2026</div>
     </div>
     
-    <script>
-        const a=document.getElementById('nHilos'),b=document.getElementById('nBuffer'),c=document.getElementById('nHilo'),d=document.getElementById('calcularBtn'),e=document.getElementById('limpiarBtn'),f=document.getElementById('resultado'),g=document.getElementById('error'),h={1:"Azul",2:"Naranja",3:"Verde",4:"Marrón",5:"Gris",6:"Blanco",7:"Rojo",8:"Negro",9:"Amarillo",10:"Violeta",11:"Rosa",12:"Aqua"};a.addEventListener('change',i);a.addEventListener('input',i);function i(){const j=parseInt(a.value);c.innerHTML='<option value="">-- Selecciona un hilo --</option>';if(j>0&&j<=12)for(let k=1;k<=j;k++){const l=document.createElement('option');l.value=k;l.textContent=`${h[k]}`;c.appendChild(l)}}d.addEventListener('click',function(){const j=parseInt(a.value),m=parseInt(b.value),n=parseInt(c.value);if(!j||!m||!n){p('Por favor completa todos los campos');return}if(m<1||m>12){p('Buffer debe estar entre 1 y 12');return}if(n<1||n>j){p(`Hilo debe estar entre 1 y ${j}`);return}const o=j*(m-1)+n;q({buffer_color:h[m],hilo_color:h[n],numero_hilo:o});r()});e.addEventListener('click',function(){a.value='6';b.value='';c.value='';f.classList.remove('activo');r();i()});function q(s){document.getElementById('resultadoBuffer').textContent=s.buffer_color;document.getElementById('resultadoHilo').textContent=s.hilo_color;document.getElementById('resultadoNumero').textContent=s.numero_hilo;f.classList.add('activo')}function p(t){g.textContent=t;g.classList.add('activo')}function r(){g.classList.remove('activo')}i();
-    </script>
-    <script>
-        // Plantilla: generación y copia (Título fijo: FDT) + toggle submenu
-        const btnGen = document.getElementById('generarPlantilla');
-        const btnCopy = document.getElementById('copiarPlantilla');
-        const out = document.getElementById('plantillaSalida');
-        const tplToggle = document.getElementById('tplToggle');
-        const tplContent = document.querySelector('.template-content');
-
-        function generarPlantilla() {
-            const puerto = document.getElementById('tplPuerto').value.trim() || '-';
-            const bandeja = document.getElementById('tplBandeja').value.trim() || '-';
-            const splitter = document.getElementById('tplSplitter').value.trim() || '-';
-            const puertosUsados = document.getElementById('tplPuertosUsados').value.trim() || '-';
-            const closure = document.getElementById('tplClosure').value.trim() || '-';
-
-            const nHilos = a.value || '12';
-            const buffer = b.value || '-';
-            const hilo = c.value || '-';
-            const numeroHilo = (nHilos !== '-' && buffer !== '-') ? (parseInt(nHilos) * (parseInt(buffer) - 1) + (hilo === '-' ? 0 : parseInt(hilo))) : '-';
-
-            // Construir plantilla con título fijo "FDT"
-            const lines = [];
-            lines.push('*FDT:*');
-            lines.push('*Puerto:* ' + puerto);
-            lines.push('*Bandeja:* ' + bandeja);
-            lines.push('*Splitter:* ' + splitter);
-            lines.push('*FDT Puerto(s) usado(s):* ' + puertosUsados);
-            lines.push('*Closure Puerto(s) usado(s):* ' + closure);
-            //lines.push('Buffer: ' + buffer + ' | Hilo: ' + hilo);
-            //lines.push('N° Hilo: ' + numeroHilo);
-
-            out.value = lines.join('\n');
-            out.select();
-        }
-
-        async function copiarPlantilla() {
-            try {
-                await navigator.clipboard.writeText(out.value);
-                btnCopy.textContent = '✓';
-                setTimeout(()=> btnCopy.textContent = 'Copiar', 1200);
-            } catch (err) {
-                btnCopy.textContent = 'Err';
-                console.error(err);
-            }
-        }
-
-        if (btnGen) btnGen.addEventListener('click', generarPlantilla);
-        if (btnCopy) btnCopy.addEventListener('click', copiarPlantilla);
-
-        // Toggle behavior for template submenu
-        if (tplToggle && tplContent) {
-            tplToggle.addEventListener('click', () => {
-                const open = tplContent.classList.toggle('open');
-                tplToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                tplContent.setAttribute('aria-hidden', open ? 'false' : 'true');
-                tplToggle.textContent = open ? '🔼 Generar Plantilla' : '🔽 Generar Plantilla';
-            });
-        }
-
-        // Toggle + generación para Plantilla de Liquidación
-        const tplToggleLiq = document.getElementById('tplToggleLiq');
-        const tplContentLiq = document.getElementById('tplContentLiq');
-        const btnGenLiq = document.getElementById('generarPlantillaLiq');
-        const btnCopyLiq = document.getElementById('copiarPlantillaLiq');
-        const outLiq = document.getElementById('plantillaSalidaLiq');
-
-        if (tplToggleLiq && tplContentLiq) {
-            tplToggleLiq.addEventListener('click', () => {
-                const open = tplContentLiq.classList.toggle('open');
-                tplToggleLiq.setAttribute('aria-expanded', open ? 'true' : 'false');
-                tplContentLiq.setAttribute('aria-hidden', open ? 'false' : 'true');
-                tplToggleLiq.textContent = open ? '🔼 GENERAR PLANTILLA DE LIQUIDACIÓN' : '🔽 GENERAR PLANTILLA DE LIQUIDACIÓN';
-            });
-        }
-
-        if (btnGenLiq) {
-            btnGenLiq.addEventListener('click', () => {
-                const direccion = document.getElementById('tplDireccion').value.trim() || '-';
-                const edificio = document.getElementById('tplEdificio').value.trim() || '-';
-                const torres = document.getElementById('tplTorres').value || '0';
-                const pisos = document.getElementById('tplPisos').value || '0';
-                const dptos = document.getElementById('tplDptosPorPiso').value || '-';
-                const pisoFatRaw = (document.getElementById('tplPisoFat').value || '').trim();
-                const pisoFat = pisoFatRaw ? pisoFatRaw.replace(/\s*,\s*/g, ',') : '-';
-                const ingreso = document.getElementById('tplIngreso').value.trim() || '-';
-                const sotanos = document.getElementById('tplSotanos').value || '0';
-
-                const matClosure = document.getElementById('tplMatClosure').value.trim() || '-';
-                const matFat = document.getElementById('tplMatFat').value.trim() || '-';
-                const matPreformados = document.getElementById('tplMatPreformados').value.trim() || '-';
-                const matEtiquetas = document.getElementById('tplMatEtiquetas').value.trim() || '-';
-                const matCintillos = document.getElementById('tplMatCintillos').value.trim() || '-';
-                const matSmuv = document.getElementById('tplMatSmuv').value.trim() || '-';
-                const matCinta = document.getElementById('tplMatCinta').value.trim() || '-';
-                const matFO = document.getElementById('tplMatFO').value.trim() || '-';
-
-                const tecEmp = document.getElementById('tplTecEmpalmador').value.trim() || '-';
-                const tecLin = document.getElementById('tplTecLiniero').value.trim() || '-';
-                const tecAyud = document.getElementById('tplTecAyudante').value.trim() || '-';
-
-                const lines = [];
-                //lines.push('PLANTILLA DE LIQUIDACION');
-                lines.push('*Dirección:* ' + direccion);
-                lines.push('*Nombre de Edificio:* ' + edificio);
-                lines.push('*Cantidad de Torres:* ' + torres);
-                lines.push('*Cantidad de Pisos:* ' + pisos);
-                lines.push('*Dptos. por Piso:* ' + dptos);
-                lines.push('*Piso donde queda el FAT:* ' + pisoFat);
-                lines.push('*Ingreso:* ' + ingreso);
-                lines.push('*Cantidad de Sótanos:* ' + sotanos);
-                lines.push('');
-                lines.push('*Materiales Utilizados:*');
-                lines.push('*Closure:* ' + matClosure);
-                lines.push('*Fat:* ' + matFat);
-                lines.push('*Preformados:* ' + matPreformados);
-                lines.push('*Etiquetas:* ' + matEtiquetas);
-                lines.push('*Cintillos Amarres:* ' + matCintillos);
-                lines.push('*Smuv:* ' + matSmuv);
-                lines.push('*Cinta Aislante:* ' + matCinta);
-                lines.push('*F.O (mts):* ' + matFO);
-                lines.push('');
-                lines.push('*Cuadrilla:*');
-                lines.push('*Tec. Empalmador:* ' + tecEmp);
-                lines.push('*Tec. Liniero:* ' + tecLin);
-                lines.push('*Tec. Ayudante:* ' + tecAyud);
-
-                outLiq.value = lines.join('\n');
-                outLiq.select();
-            });
-        }
-
-        if (btnCopyLiq) {
-            btnCopyLiq.addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(outLiq.value);
-                    btnCopyLiq.textContent = '✓';
-                    setTimeout(()=> btnCopyLiq.textContent = 'Copiar', 1200);
-                } catch (err) {
-                    btnCopyLiq.textContent = 'Err';
-                    console.error(err);
-                }
-            });
-        }
-    </script>
-    
+    <script src="script/script.js"></script>
 </body>
 </html>
